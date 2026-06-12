@@ -55,6 +55,34 @@ async def root():
         "db_timeout_configured": True
     }
 
+@app.get("/api/admin/db-check")
+async def db_check():
+    import re
+    from motor.motor_asyncio import AsyncIOMotorClient
+    uri = settings.MONGODB_URI
+    masked_uri = re.sub(r":([^@/]+)@", ":****@", uri)
+    try:
+        client = AsyncIOMotorClient(uri, serverSelectionTimeoutMS=3000)
+        db_name = uri.split("/")[-1].split("?")[0] or "diya_portfolio"
+        db = client[db_name]
+        ping_res = await db.command("ping")
+        collections = await db.list_collection_names()
+        return {
+            "status": "success",
+            "db_name": db_name,
+            "ping": ping_res,
+            "collections": collections,
+            "uri_configured": masked_uri
+        }
+    except Exception as e:
+        import traceback
+        return {
+            "status": "error",
+            "message": str(e),
+            "traceback": traceback.format_exc(),
+            "uri_configured": masked_uri
+        }
+
 # --- Stats Endpoints ---
 @app.get("/api/stats/{key}")
 async def get_stat_value(key: str):
