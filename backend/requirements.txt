@@ -8,3 +8,5 @@ python-dotenv
 resend
 python-multipart
 httpx
+email-validator
+
