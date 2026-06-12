@@ -49,7 +49,11 @@ def verify_admin_token(authorization: Optional[str] = Header(None)) -> bool:
 
 @app.get("/")
 async def root():
-    return {"message": "Diya Panjwani's Portfolio API is online!"}
+    return {
+        "message": "Diya Panjwani's Portfolio API is online!",
+        "version": "1.0.1",
+        "db_timeout_configured": True
+    }
 
 # --- Stats Endpoints ---
 @app.get("/api/stats/{key}")
