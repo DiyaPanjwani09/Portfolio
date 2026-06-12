@@ -25,23 +25,36 @@ export default function AdminPanel() {
   const fetchDashboardData = () => {
     // Fetch resume info
     fetch(`${apiBaseUrl}/api/resume/info`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch resume info');
+        return res.json();
+      })
       .then((data) => setResumeInfo(data))
-      .catch((err) => console.log('Error fetching resume info:', err));
+      .catch((err) => {
+        console.log('Error fetching resume info:', err);
+        setStatus({ type: 'error', text: 'Failed to retrieve resume configuration from database.' });
+      });
 
     // Fetch messages
     fetch(`${apiBaseUrl}/api/admin/messages`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then((res) => {
-        if (!res.ok) throw new Error('Unauthorized');
+        if (res.status === 401 || res.status === 403) {
+          handleLogout();
+          throw new Error('Session expired');
+        }
+        if (!res.ok) throw new Error('Failed to fetch messages');
         return res.json();
       })
-      .then((data) => setMessages(data))
+      .then((data) => {
+        setMessages(data);
+      })
       .catch((err) => {
         console.log('Error fetching messages:', err);
-        // Token might be expired or invalid
-        handleLogout();
+        if (err.message !== 'Session expired') {
+          setStatus({ type: 'error', text: 'Database connection error. Please verify your MongoDB Atlas network access.' });
+        }
       });
   };
 
