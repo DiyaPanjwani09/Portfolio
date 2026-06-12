@@ -47,7 +47,7 @@ const TypingTagline = ({ taglines }) => {
 export default function Hero() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [resumeUploaded, setResumeUploaded] = useState(false);
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
 
   useEffect(() => {
     // Check if a PDF resume is uploaded in the backend

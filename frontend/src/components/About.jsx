@@ -8,7 +8,7 @@ export default function About() {
   const [stars, setStars] = useState(0);
   const [isStarred, setIsStarred] = useState(false);
   
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
 
   useEffect(() => {
     // 1. Fetch current views and increment
