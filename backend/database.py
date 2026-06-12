@@ -11,7 +11,11 @@ db = None
 def get_db():
     global client, db
     if db is None:
-        client = AsyncIOMotorClient(settings.MONGODB_URI)
+        client = AsyncIOMotorClient(
+            settings.MONGODB_URI,
+            serverSelectionTimeoutMS=5000,
+            connectTimeoutMS=5000
+        )
         # Extract DB name from URI or default
         db_name = settings.MONGODB_URI.split("/")[-1].split("?")[0] or "diya_portfolio"
         db = client[db_name]
