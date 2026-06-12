@@ -1,10 +1,10 @@
 fastapi
 uvicorn[standard]
 motor
+dnspython
 pydantic
 pydantic-settings
 python-dotenv
 resend
-google-generativeai
 python-multipart
 httpx
