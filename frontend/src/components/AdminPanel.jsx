@@ -30,7 +30,7 @@ export default function AdminPanel() {
       .catch((err) => console.log('Error fetching resume info:', err));
 
     // Fetch messages
-    fetch(`${apiBaseUrl}/api/contact/messages`, {
+    fetch(`${apiBaseUrl}/api/admin/messages`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then((res) => {
@@ -57,7 +57,7 @@ export default function AdminPanel() {
       });
 
       const data = await response.json();
-      if (response.ok && data.success) {
+      if (response.ok && (data.success || data.status === 'success' || data.token)) {
         localStorage.setItem('adminToken', passcode);
         setToken(passcode);
         setLoginError('');
@@ -90,7 +90,7 @@ export default function AdminPanel() {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/api/resume/upload`, {
+      const response = await fetch(`${apiBaseUrl}/api/admin/resume`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
